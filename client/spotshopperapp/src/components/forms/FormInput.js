@@ -1,5 +1,5 @@
 import React from 'react'
-import "../pages/FormInput.css"
+import "./FormInput.css"
 
 const FormInput = (props) => {
   const { onChange, id, ...inputProps } = props;

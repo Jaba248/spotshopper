@@ -1,17 +1,11 @@
 import logo from '../spot-logo.png';
-import arrowsymbol from '../arrow-button.png';
-import FormInput from './FormInput';
-import { useState } from 'react';
+import Form from "../components/forms/Form"
+import {routes} from "../api/utils"
 import './Signinpage.css'
-
+import {useNavigate } from "react-router-dom"
+import {Link} from "react-router-dom"
 function Signinpage() {
-  const [values, setValues] = useState({
-    Username:"",
-    Email:"",
-    Password:"",
-    ConfirmPassword:""
-  });
-
+  const navigate=useNavigate()
   const inputs = [
     {
    id:0,
@@ -22,14 +16,6 @@ function Signinpage() {
       // label:"Username"
     },
     {
-   id:1,
-      name:"Email",
-      type:"text",
-      placeholder:"Email Address...",
-      // errorMessage:"Email Address...",
-      // label:"Email"
-    },
-    {
    id:2,
       name:"Password",
       type:"password",
@@ -37,28 +23,20 @@ function Signinpage() {
       // errorMessage:"Email Address...",
       // label:"Password"
     }, 
-    {
-   id:3,
-      name:"ConfirmPassword",
-      type:"password",
-      placeholder:"Confirm Password...",
-      // errorMessage:"Email Address...",
-      // label:"Confirm Password"
-    }
   ]
+  
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
 
+  const handleData = ({setLoading,apiData:{user,token}}) => {
+   // returns data from api
+   //todo store token
+   if(token){
+    navigate("/")
+   }
+   else{
+    setLoading(false)
+   }
   };
-
-  const onChange = (e)=>{
-    setValues({...values, [e.target.name]: e.target.value })
-  }
-
-  console.log(values)
-
-  const [ isClicked, setIsClicked ] = useState(false);
 
   return (
     <div className="App">
@@ -66,19 +44,9 @@ function Signinpage() {
         <img src={logo} className="App-logo" alt="logo" />
         <div><h1 id="signuptext">SIGN IN</h1></div>
       <div className="signupformcontainer">
-      <form onSubmit={handleSubmit}>
-        {inputs.map(input=>(
-          <FormInput key={input.id} {...input} value={values[input.name]} onChange={onChange} />
-        ))}
-        
-        <div >
-            <button className="submitbutton" type="submit" onClick={() => setIsClicked(true)}>
-              <img src={arrowsymbol}  width="50" height="50" alt="Right Arrow Button" /></button>
-        </div>
-        
-      </form> 
+      <Form method="POST" action={routes.login} handleData={handleData} inputs={inputs}/>
       </div>
-        <a href="/Signuppage.js" id="backtosignup">Back to Sign Up</a>
+        <Link to="/signup" id="backtosignup">Back to Sign Up</Link>
       </header>
     </div>
   );

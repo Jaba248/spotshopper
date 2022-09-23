@@ -1,0 +1,12 @@
+.submitbutton {
+    display:flex;
+    cursor:pointer;
+    margin:20px auto;
+    background: none;
+    border: none;
+}
+
+.submitbutton:hover {
+  background-color: transparent;
+  transform: translateY(5px);
+}

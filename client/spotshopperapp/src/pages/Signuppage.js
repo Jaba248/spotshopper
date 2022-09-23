@@ -1,17 +1,11 @@
 import logo from '../spot-logo.png';
-import arrowsymbol from '../arrow-button.png';
-import FormInput from './FormInput';
-import { useState } from 'react';
+import Form from "../components/forms/Form"
+import {routes} from "../api/utils"
+import {useNavigate } from "react-router-dom"
 import './Signuppage.css';
 
 function Signuppage() {
-  const [values, setValues] = useState({
-    Username:"",
-    Email:"",
-    Password:"",
-    ConfirmPassword:""
-  });
-
+  const navigate=useNavigate()
   const inputs = [
     {
    id:0,
@@ -47,38 +41,27 @@ function Signuppage() {
     }
   ]
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-  };
-
-  const onChange = (e)=>{
-    setValues({...values, [e.target.name]: e.target.value })
+  const handleValidation=({values,setValues,setError})=>{
+    // Run before request is made
+    let isValid=true;
+    // todo validate email
+    if(values.Password!==values.ConfirmPassword){
+      setError({name:"ConfirmPassword",errorMessage:"Passwords do not match"})
+      isValid=false
+    }
+    return isValid;
   }
-
-  console.log(values)
-
-  
-  const [ isClicked, setIsClicked ] = useState(false);
-  
+  const handleData = ({setLoading,apiData:{registered,errorMessage}}) => {
+    // returns data from api
+    registered?navigate("/signin"):setLoading(false)
+   };
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <div><h1 id="signuptext">SIGN UP</h1></div>
       <div className="signupformcontainer">
-      <form onSubmit={handleSubmit}>
-        {inputs.map(input=>(
-          <FormInput key={input.id} {...input} value={values[input.name]} onChange={onChange} />
-          ))}
-          {/* <h1>{values.Username}</h1> */}
-        
-        <div >
-            <button className="submitbutton" type="submit" onClick={() => setIsClicked(true)}>
-              <img src={arrowsymbol}  width="50" height="50" alt="Right Arrow Button" /></button>
-        </div>
-        
-      </form> 
+      <Form method="POST" action={routes.register} handleData={handleData} inputs={inputs} handleValidation={handleValidation}/>
       </div>
         <div id="alreadyuser"><p>Already a User?</p></div>
         {/* <link to='/Signinpage' id="signinlink">SIGN IN</link> */}
